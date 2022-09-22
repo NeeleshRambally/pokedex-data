@@ -45,36 +45,4 @@ public class Util {
         val headers = headersJson(bearerToken);
         return new HttpEntity<>(obj, headers);
     }
-
-    public static void waitUntilOrFail(Supplier<Boolean> supplier) {
-        waitUntilOrFail(supplier, TIMEOUT_ASYNC_OPERATIONS);
-    }
-
-    @SneakyThrows
-    public static void waitUntilOrFail(Supplier<Boolean> supplier, Duration timeoutAfter, Duration sleep) {
-        var duration = Duration.ofSeconds(0);
-        while (duration.compareTo(timeoutAfter) < 0) {
-            try {
-                boolean expectedStateReached = supplier.get();
-                if (expectedStateReached) {
-                    return;
-                }
-            } catch (Throwable throwable) {
-                Thread.sleep(sleep.toMillis());
-                duration = duration.plus(sleep);
-                if (duration.compareTo(timeoutAfter) >= 0) {
-                    throw throwable;
-                }
-                continue;
-            }
-            Thread.sleep(sleep.toMillis());
-            duration = duration.plus(sleep);
-        }
-        fail(String.format("Operation timed out after %s", timeoutAfter));
-    }
-
-    @SneakyThrows
-    public static void waitUntilOrFail(Supplier<Boolean> supplier, Duration timeoutAfter) {
-        waitUntilOrFail(supplier, timeoutAfter, Duration.ofMillis(150));
-    }
 }
