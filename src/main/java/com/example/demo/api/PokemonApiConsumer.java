@@ -62,7 +62,9 @@ public class PokemonApiConsumer {
 
             if (!pokemonName.isEmpty() && !detailsUrl.isEmpty()) {
                 val pokemonDO = RestUtil.get(restTemplate, detailsUrl, null, PokemonModel.class);
-                pokemonService.createOrUpdatePokemon(pokemonDO, pokemonName);
+                if(pokemonDO.isPresent()) {
+                    pokemonService.createOrUpdatePokemon(pokemonDO, pokemonName);
+                }
             }
         }
     }
