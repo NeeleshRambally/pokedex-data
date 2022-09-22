@@ -178,17 +178,4 @@
 
 		</plugins>
 	</build>
-
-	<testResources>
-		<testResource>
-			<filtering>true</filtering>
-			<directory>src/test/resources</directory>
-			<includes>
-				<include>application.properties</include>
-				<include>application-test.properties</include>
-				<include>log4j2.yml</include>
-			</includes>
-		</testResource>
-	</testResources>
-
 </project>
