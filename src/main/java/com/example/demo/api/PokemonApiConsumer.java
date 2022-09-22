@@ -17,6 +17,8 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
+import static java.util.Objects.isNull;
+
 @Log4j2
 @Component
 @RequiredArgsConstructor
@@ -39,7 +41,7 @@ public class PokemonApiConsumer {
             val optionalPokemonapiV2List = RestUtil.get(restTemplate, batchUrl, null, PokemonapiV2.class);
             if (optionalPokemonapiV2List.isPresent()) {
                 val pokemonApiV2 = optionalPokemonapiV2List.get();
-                if (pokemonApiV2.getNext().isEmpty()) {
+                if (isNull(pokemonApiV2.getNext())) {
                     log.info("Consumption completed.");
                     return;
                 }
