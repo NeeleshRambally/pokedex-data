@@ -8,8 +8,8 @@
 		<version>2.7.3</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.example</groupId>
-	<artifactId>demo</artifactId>
+	<groupId>com.pokedex</groupId>
+	<artifactId>pokedex-data</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>pokeApiConsumer</name>
 	<description>Consumes data via rest from URL</description>
@@ -83,12 +83,6 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
-		</dependency>
-
-		<dependency>
 			<groupId>com.jayway.jsonpath</groupId>
 			<artifactId>json-path</artifactId>
 			<scope>test</scope>
@@ -117,6 +111,20 @@
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter</artifactId>
 			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-install-plugin</artifactId>
+			<version>2.4</version>
+			<type>maven-plugin</type>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-deploy-plugin</artifactId>
+			<version>2.7</version>
+			<type>maven-plugin</type>
 		</dependency>
 
 	</dependencies>
@@ -161,8 +169,8 @@
 				<version>1.1.0</version>
 				<configuration>
 					<sourceDirectory>${basedir}/src/main/resources/schema</sourceDirectory>
-					<targetPackage>com.example.demo.api</targetPackage>
-					<targetPackage>com.example.demo.entity.models</targetPackage>
+					<targetPackage>com.pokedex.api</targetPackage>
+					<targetPackage>com.pokedex.entity.models</targetPackage>
 					<sourceType>json</sourceType>
 					<useTitleAsClassname>true</useTitleAsClassname>
 				</configuration>

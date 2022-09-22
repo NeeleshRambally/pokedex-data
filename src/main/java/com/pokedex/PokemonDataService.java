@@ -9,10 +9,10 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 @EnableAsync
 //@EnableAutoConfiguration(exclude = {DataSourceAutoConfiguration.class, HibernateJpaAutoConfiguration.class})
-public class PokeApiConsumerApplication {
+public class PokemonDataService {
 
     public static void main(String[] args) {
-        SpringApplication.run(PokeApiConsumerApplication.class, args);
+        SpringApplication.run(PokemonDataService.class, args);
     }
 
 }

@@ -1,10 +1,10 @@
-package com.pokedex.data.api;
+package com.pokedex.api;
 
-import com.pokedex.data.entity.models.PokemonModel;
-import com.pokedex.data.entity.models.PokemonapiV2;
-import com.pokedex.data.entity.models.Result;
-import com.pokedex.data.services.PokemonService;
-import com.pokedex.data.utils.RestUtil;
+import com.pokedex.entity.models.PokemonModel;
+import com.pokedex.entity.models.PokemonapiV2;
+import com.pokedex.entity.models.Result;
+import com.pokedex.services.PokemonService;
+import com.pokedex.utils.RestUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;

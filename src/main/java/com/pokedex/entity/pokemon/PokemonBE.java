@@ -1,4 +1,4 @@
-package com.pokedex.data.entity.pokemon;
+package com.pokedex.entity.pokemon;
 
 import lombok.Data;
 

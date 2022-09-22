@@ -1,4 +1,4 @@
-package com.pokedex.data.testUtils;
+package com.pokedex.testUtils;
 
 import lombok.val;
 import org.springframework.http.HttpEntity;

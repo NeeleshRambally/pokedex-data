@@ -1,4 +1,4 @@
-package com.pokedex.data.entity.models;
+package com.pokedex.entity.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;

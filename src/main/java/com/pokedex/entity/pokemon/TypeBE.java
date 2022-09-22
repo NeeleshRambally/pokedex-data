@@ -1,4 +1,4 @@
-package com.pokedex.data.entity.pokemon;
+package com.pokedex.entity.pokemon;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;

@@ -1,4 +1,4 @@
-package com.pokedex.data.entity;
+package com.pokedex.entity;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

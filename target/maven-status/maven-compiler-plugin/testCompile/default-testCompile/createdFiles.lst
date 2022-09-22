@@ -1,0 +1,8 @@
+com/pokedex/SmokeTest.class
+com/pokedex/testUtils/AbstractIT.class
+com/pokedex/testUtils/Util.class
+com/pokedex/testUtils/PostgresDbConfig.class
+com/pokedex/testUtils/Step.class
+com/pokedex/testUtils/PostgresDbConfig$Initializer.class
+com/pokedex/testUtils/Tests.class
+com/pokedex/PokemonDataServiceTests.class

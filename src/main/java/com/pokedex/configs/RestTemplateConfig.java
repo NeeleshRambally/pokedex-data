@@ -1,4 +1,4 @@
-package com.pokedex.data.configs;
+package com.pokedex.configs;
 
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;

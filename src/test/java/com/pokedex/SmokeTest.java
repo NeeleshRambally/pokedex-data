@@ -1,8 +1,8 @@
-package com.pokedex.data;
+package com.pokedex;
 
-import com.pokedex.data.entity.pokemon.PokemonBE;
-import com.pokedex.data.services.PokemonService;
-import com.pokedex.data.testUtils.AbstractIT;
+import com.pokedex.entity.pokemon.PokemonBE;
+import com.pokedex.services.PokemonService;
+import com.pokedex.testUtils.AbstractIT;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 

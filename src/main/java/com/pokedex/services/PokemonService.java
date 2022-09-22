@@ -1,16 +1,17 @@
-package com.pokedex.data.services;
+package com.pokedex.services;
 
 
-import com.pokedex.data.entity.Db;
-import com.pokedex.data.entity.models.*;
-import com.pokedex.data.entity.pokemon.AbbilityBE;
-import com.pokedex.data.entity.pokemon.MoveBE;
-import com.pokedex.data.entity.pokemon.PokemonBE;
-import com.pokedex.data.entity.pokemon.TypeBE;
+import com.pokedex.entity.Db;
+import com.pokedex.entity.pokemon.AbbilityBE;
+import com.pokedex.entity.pokemon.MoveBE;
+import com.pokedex.entity.pokemon.PokemonBE;
+import com.pokedex.entity.pokemon.TypeBE;
+import com.pokedex.entity.models.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -18,7 +19,7 @@ import java.util.Optional;
 
 import static java.util.Objects.isNull;
 
-@Component
+@Service
 @Log4j2
 @RequiredArgsConstructor
 public class PokemonService {
@@ -27,18 +28,22 @@ public class PokemonService {
 
     @Transactional
     public void createOrUpdatePokemon(Optional<PokemonModel> pokemonModel, String pokemonName) {
-        if (pokemonModel.isPresent()) {
-            log.info("processing pokemon {}", pokemonName);
+       try {
+           if (pokemonModel.isPresent()) {
+               log.info("processing pokemon {}", pokemonName);
 
-            val pokemon = pokemonModel.get();
-            PokemonBE pokemonBE = new PokemonBE();
-            pokemonBE.setName(pokemonName);
-            getAndUpdateAbilities(pokemon.getAbilities(), pokemonBE);
-            getAndUpdateMoves(pokemon.getMoves(), pokemonBE);
-            getAndUpdateType(pokemon.getTypes(), pokemonBE);
-            getAndUpdateImage(pokemon.getSprites(), pokemonBE);
-            db.pokemonRepository().save(pokemonBE);
-        }
+               val pokemon = pokemonModel.get();
+               PokemonBE pokemonBE = new PokemonBE();
+               pokemonBE.setName(pokemonName);
+               getAndUpdateAbilities(pokemon.getAbilities(), pokemonBE);
+               getAndUpdateMoves(pokemon.getMoves(), pokemonBE);
+               getAndUpdateType(pokemon.getTypes(), pokemonBE);
+               getAndUpdateImage(pokemon.getSprites(), pokemonBE);
+               db.pokemonRepository().save(pokemonBE);
+           }
+       }catch (NullPointerException e){
+           log.error("Null found in required data for pokemon {}",pokemonName);
+       }
     }
 
     private void getAndUpdateAbilities(List<Ability> abilities, PokemonBE pokemonBE) {

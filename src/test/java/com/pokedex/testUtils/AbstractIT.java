@@ -1,4 +1,4 @@
-package com.pokedex.data.testUtils;
+package com.pokedex.testUtils;
 
 import com.zaxxer.hikari.HikariDataSource;
 import lombok.Getter;
