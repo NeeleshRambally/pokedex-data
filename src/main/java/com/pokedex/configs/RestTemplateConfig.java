@@ -9,9 +9,13 @@ import java.time.Duration;
 
 @Configuration
 public class RestTemplateConfig {
+
+    //This is to assist the slower api and slower network.
     @Bean
     public RestTemplate restTemplate(RestTemplateBuilder builder) {
-
-        return builder.setConnectTimeout(Duration.ofSeconds(10000l)).setReadTimeout(Duration.ofSeconds(10000l)).build();
+        return builder.
+                setConnectTimeout(Duration.ofSeconds(10000l))
+                .setReadTimeout(Duration.ofSeconds(10000l))
+                .build();
     }
 }

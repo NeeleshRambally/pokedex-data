@@ -11,7 +11,6 @@ import java.util.Optional;
 
 @Log4j2
 public class RestUtil {
-
     public static <T> Optional<T> get(RestTemplate template, String url, String bearerToken, Class<T> clazz) {
         try {
             HttpHeaders headers = new HttpHeaders();
@@ -29,15 +28,12 @@ public class RestUtil {
     }
 
     private static <T> Optional<T> get(ResponseEntity<T> response) {
-
         if (response.getStatusCode().is2xxSuccessful()) {
             return Optional.ofNullable(response.getBody());
         }
-
         if (response.getStatusCode().equals(HttpStatus.NOT_FOUND)) {
             return Optional.empty();
         }
-
         return Optional.empty();
     }
 }
