@@ -10,7 +10,6 @@ import com.pokedex.entity.models.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,10 +41,11 @@ public class PokemonService {
                db.pokemonRepository().save(pokemonBE);
            }
        }catch (NullPointerException e){
-           log.error("Null found in required data for pokemon {}",pokemonName);
+           log.error("Null found in required data for pokemon {} ..wont save",pokemonName);
        }
     }
 
+    //TODO generalise the below functions to reduce code duplication
     private void getAndUpdateAbilities(List<Ability> abilities, PokemonBE pokemonBE) {
         val pokemonAbbilities = pokemonBE.getAbbilities();
         for (Ability ability : abilities) {

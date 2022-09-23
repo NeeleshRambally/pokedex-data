@@ -10,6 +10,7 @@ com/pokedex/entity/models/XY.class
 com/pokedex/entity/models/VersionGroup.class
 com/pokedex/entity/models/Emerald.class
 com/pokedex/entity/models/Animated.class
+com/pokedex/configs/Config$SecurityConfig.class
 com/pokedex/entity/Db.class
 com/pokedex/entity/PokemonRepository.class
 com/pokedex/entity/models/Version.class
@@ -42,6 +43,7 @@ com/pokedex/entity/models/RubySapphire.class
 com/pokedex/entity/models/DreamWorld.class
 com/pokedex/entity/models/Icons.class
 com/pokedex/entity/models/Home.class
+com/pokedex/configs/Config.class
 com/pokedex/entity/models/BlackWhite.class
 com/pokedex/entity/models/GenerationIii.class
 com/pokedex/entity/models/Versions.class

@@ -1,7 +1,11 @@
 package com.pokedex.utils;
 
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
+import org.springframework.retry.support.RetryTemplate;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.client.UnknownHttpStatusCodeException;
@@ -24,20 +28,23 @@ public class RestUtil {
             log.error("Error with {}", url);
         } catch (ResourceAccessException resourceAccessException) {
             log.error("Cannot connect to url {}", url);
+        } catch (Exception ex){
+            log.error(ex.getMessage());
         }
         return Optional.empty();
     }
 
     private static <T> Optional<T> get(ResponseEntity<T> response) {
-
         if (response.getStatusCode().is2xxSuccessful()) {
             return Optional.ofNullable(response.getBody());
         }
-
         if (response.getStatusCode().equals(HttpStatus.NOT_FOUND)) {
             return Optional.empty();
         }
-
+        if(response.getStatusCode().equals(HttpStatus.INTERNAL_SERVER_ERROR)){
+            log.error("Server Error: {}",response.getBody());
+            return Optional.empty();
+        }
         return Optional.empty();
     }
 }
