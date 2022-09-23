@@ -36,12 +36,12 @@ public class PokemonApiConsumer {
     private static final String POKEMON_LIST_LIMIT_URL = "/pokemon/?limit=%s";
     private final PokemonService pokemonService;
     private final RestTemplate restTemplate;
-    private final RetryTemplate retryTemplate;
+
     @Value("${pokemon.v2.url}")
     private String BASE_URL;
 
     @EventListener(ApplicationReadyEvent.class) //Wait for app start event , startup at app start event.
-    @Scheduled(cron = "0 0 * * * *") //Run once a day
+    @Scheduled(cron = "0 0 1 * * *") //Run once a day
     public void consumePokemonData() {
         log.info("Running api consumer...");
         val batchSize = 100;
@@ -92,6 +92,8 @@ public class PokemonApiConsumer {
                   val pokemonDO = RestUtil.get(restTemplate, detailsUrl, null, PokemonModel.class);
                   if (pokemonDO.isPresent()) {
                       pokemonService.createOrUpdatePokemon(pokemonDO, pokemonName);
+                  }else{
+                      log.error("Error requesting metadata for pokemon {}",pokemonName);
                   }
               }
           }
