@@ -8,25 +8,35 @@ import com.pokedex.utils.RestUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
+import org.apache.commons.collections4.ListUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
+import org.springframework.retry.support.RetryTemplate;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import static java.util.Objects.isNull;
 
 @Log4j2
-@Component
+@Service
 @RequiredArgsConstructor
 public class PokemonApiConsumer {
 
     private static final String POKEMON_LIST_LIMIT_URL = "/pokemon/?limit=%s";
     private final PokemonService pokemonService;
     private final RestTemplate restTemplate;
+    private final RetryTemplate retryTemplate;
     @Value("${pokemon.v2.url}")
     private String BASE_URL;
 
@@ -66,22 +76,27 @@ public class PokemonApiConsumer {
                 batchUrl = nextBatchUrl;
                 val result = pokemonApiV2.getResults();
                 processAndFetchPokemonDetails(result);
+            }else{
+                return;
             }
         }
     }
 
     public void processAndFetchPokemonDetails(List<Result> simplePokemonArray) {
         //TODO Implement batching of list and async processing of each batch for faster processing.
-        for (Result result : simplePokemonArray) {
-            val pokemonName = result.getName();
-            val detailsUrl = result.getUrl();
-            if (!pokemonName.isEmpty() && !detailsUrl.isEmpty()) {
-                val pokemonDO = RestUtil.get(restTemplate, detailsUrl, null, PokemonModel.class);
-                if (pokemonDO.isPresent()) {
-                    pokemonService.createOrUpdatePokemon(pokemonDO, pokemonName);
-                }
-            }
-        }
+      CompletableFuture.runAsync(() -> {
+          for (Result result : simplePokemonArray) {
+              val pokemonName = result.getName();
+              val detailsUrl = result.getUrl();
+              if (!pokemonName.isEmpty() && !detailsUrl.isEmpty()) {
+                  val pokemonDO = RestUtil.get(restTemplate, detailsUrl, null, PokemonModel.class);
+                  if (pokemonDO.isPresent()) {
+                      pokemonService.createOrUpdatePokemon(pokemonDO, pokemonName);
+                  }
+              }
+          }
+      });
+
     }
 
 }
