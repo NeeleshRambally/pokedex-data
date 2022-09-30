@@ -8,23 +8,14 @@ import com.pokedex.utils.RestUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
-import org.apache.commons.collections4.ListUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
-import org.springframework.retry.annotation.Backoff;
-import org.springframework.retry.annotation.Retryable;
-import org.springframework.retry.support.RetryTemplate;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
 import static java.util.Objects.isNull;
 
@@ -41,7 +32,7 @@ public class PokemonApiConsumer {
     private String BASE_URL;
 
     @EventListener(ApplicationReadyEvent.class) //Wait for app start event , startup at app start event.
-    @Scheduled(cron = "0 0 1 * * *") //Run once a day
+    @Scheduled(cron = "${pokemon.cron.config}") //Run once a day
     public void consumePokemonData() {
         log.info("Running api consumer...");
         val batchSize = 100;
@@ -62,7 +53,7 @@ public class PokemonApiConsumer {
          * Consumer to run once a day to get latest data from pokemon API
          * */
 
-        //TODO implement retry template for api consumer of main API and secondary detials API.
+        //TODO implement retry template for api consumer of main API and secondary details API.
         String batchUrl = String.format(BASE_URL + POKEMON_LIST_LIMIT_URL, batchSize);
         while (!batchUrl.isEmpty()) {
             val optionalPokemonapiV2List = RestUtil.get(restTemplate, batchUrl, null, PokemonapiV2.class);
@@ -76,7 +67,7 @@ public class PokemonApiConsumer {
                 batchUrl = nextBatchUrl;
                 val result = pokemonApiV2.getResults();
                 processAndFetchPokemonDetails(result);
-            }else{
+            } else {
                 return;
             }
         }
@@ -84,21 +75,18 @@ public class PokemonApiConsumer {
 
     public void processAndFetchPokemonDetails(List<Result> simplePokemonArray) {
         //TODO Implement batching of list and async processing of each batch for faster processing.
-      CompletableFuture.runAsync(() -> {
-          for (Result result : simplePokemonArray) {
-              val pokemonName = result.getName();
-              val detailsUrl = result.getUrl();
-              if (!pokemonName.isEmpty() && !detailsUrl.isEmpty()) {
-                  val pokemonDO = RestUtil.get(restTemplate, detailsUrl, null, PokemonModel.class);
-                  if (pokemonDO.isPresent()) {
-                      pokemonService.createOrUpdatePokemon(pokemonDO, pokemonName);
-                  }else{
-                      log.error("Error requesting metadata for pokemon {}",pokemonName);
-                  }
-              }
-          }
-      });
-
+        for (Result result : simplePokemonArray) {
+            val pokemonName = result.getName();
+            val detailsUrl = result.getUrl();
+            if (!pokemonName.isEmpty() && !detailsUrl.isEmpty()) {
+                val pokemonDO = RestUtil.get(restTemplate, detailsUrl, null, PokemonModel.class);
+                if (pokemonDO.isPresent()) {
+                    pokemonService.createOrUpdatePokemon(pokemonDO, pokemonName);
+                } else {
+                    log.error("Error requesting metadata for pokemon {}", pokemonName);
+                }
+            }
+        }
     }
 
 }
