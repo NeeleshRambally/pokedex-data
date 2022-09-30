@@ -24,19 +24,17 @@ import static java.util.Objects.isNull;
 @RequiredArgsConstructor
 public class PokemonApiConsumer {
 
-    private static final String POKEMON_LIST_LIMIT_URL = "/pokemon/?limit=%s";
     private final PokemonService pokemonService;
     private final RestTemplate restTemplate;
-
     @Value("${pokemon.v2.url}")
     private String BASE_URL;
+    @Value("${pokemon.v2.batchSize}")
+    private int batchSize;
 
     @EventListener(ApplicationReadyEvent.class) //Wait for app start event , startup at app start event.
-    @Scheduled(cron = "${pokemon.cron.config}") //Run once a day
+    @Scheduled(cron = "${pokemon.cron.config}") //Run once a day can be hot swapped and configured with spring boot admin - for later integration.
     public void consumePokemonData() {
         log.info("Running api consumer...");
-        val batchSize = 100;
-
         /**
          * @Disclaimer
          * Don't have much understanding of pokemon hence unsure of the api data consumed and
@@ -54,7 +52,7 @@ public class PokemonApiConsumer {
          * */
 
         //TODO implement retry template for api consumer of main API and secondary details API.
-        String batchUrl = String.format(BASE_URL + POKEMON_LIST_LIMIT_URL, batchSize);
+        String batchUrl = String.format(BASE_URL , batchSize);
         while (!batchUrl.isEmpty()) {
             val optionalPokemonapiV2List = RestUtil.get(restTemplate, batchUrl, null, PokemonapiV2.class);
             if (optionalPokemonapiV2List.isPresent()) {
